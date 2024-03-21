@@ -1,30 +1,21 @@
-from bible_verse import main
+# views.py
+
 from datetime import datetime
 from random import randrange
-from django.views import View
 from django.shortcuts import render, redirect
+from django.views import View
 from .models import WeatherEntity
 from .repositories import WeatherRepository
 
-class WeatherView(View):
-    def get(self, request):
-        verse = main.get_bible_verse()
-        repository = WeatherRepository(collectionName='weathers')
-        weathers = repository.getAll()
-        return render(request, "home.html", {"weathers":weathers, "verse":verse})
-    
+
+# views.py
 
 class WeatherGenerate(View):
     def get(self, request):
         repository = WeatherRepository(collectionName='weathers')
-        # wheater = WeatherEntity(
-        #     temperature=randrange(start=17, stop=40),
-        #     date=datetime.now()
-        # )
-        wheater = {
-            "temperature" : 28,
-            "date": "hoje"
-            }
-        repository.insert(wheater)
-
+        weather_entity = WeatherEntity(
+            temperature=randrange(start=17, stop=40),
+            date=datetime.now()
+        )
+        repository.insert(weather_entity.to_dict())
         return redirect('Weather View')
