@@ -1,10 +1,11 @@
-# models.py
-
-from datetime import datetime
+from typing import Any
+from django.db import models
 
 class WeatherEntity:
 
-    def __init__(self, temperature, date, city='', atmosphericPressure='', humidity='', weather='') -> None:
+    def __init__(self, temperature, date,
+                 city='', atmosphericPressure=0,
+                 humidity=0, weather='') -> None:
         self.temperature = temperature
         self.city = city
         self.atmosphericPressure = atmosphericPressure
@@ -12,12 +13,11 @@ class WeatherEntity:
         self.weather = weather
         self.date = date
 
-    def to_dict(self):
-        return {
-            "temperature": self.temperature,
-            "city": self.city,
-            "atmosphericPressure": self.atmosphericPressure,
-            "humidity": self.humidity,
-            "weather": self.weather,
-            "date": self.date.strftime("%Y-%m-%d %H:%M:%S")
-        }
+    def __str__(self) -> str:
+        return (f"Weather <{self.temperature}>")
+    
+    def __getattribute__(self, __name: str) -> Any:
+        if (__name=='date'):
+            return object.__getattribute__(self, __name).strftime("%d/%m/%Y %H:%M:%S")
+        else:
+            return object.__getattribute__(self, __name)

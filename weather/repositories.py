@@ -1,9 +1,5 @@
-# repositories.py
-
-import pymongo
 from django.conf import settings
-
-# repositories.py
+import pymongo
 
 class WeatherRepository:
 
@@ -13,20 +9,23 @@ class WeatherRepository:
         self.collection = collectionName
 
     def getConnection(self):
-        client = pymongo.MongoClient(getattr(settings, "MONGO_CONNECTION_STRING"))
-        connection = client[getattr(settings, "MONGO_DATABASE_NAME")]
+        client = pymongo.MongoClient(
+            getattr(settings, "MONGO_CONNECTION_STRING"))
+        connection = client[
+            getattr(settings, "MONGO_DATABASE_NAME")]
         return connection
     
-    def getCollection(self):
+    def getColletion(self):
         conn = self.getConnection()
         collection = conn[self.collection]
         return collection
     
     def getAll(self):
-        collection = self.getCollection()
-        documents = collection.find({})
-        return documents
+        document = self.getColletion().find({})
+        return document
     
     def insert(self, document):
-        collection = self.getCollection()
-        collection.insert_one(document)
+        self.getColletion().insert_one(document)
+
+    def deleteAll(self):
+        self.getColletion().delete_many({})
